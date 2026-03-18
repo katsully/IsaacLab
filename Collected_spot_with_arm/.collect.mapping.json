@@ -1,0 +1,53 @@
+{
+    "version": "1.0",
+    "file_records": [
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/spot_with_arm.usd",
+            "source_hash": "862cec3c33bee5299fb7c4ababf81fb092e35f5e",
+            "target_url": "./spot_with_arm.usd",
+            "target_hash": "1d5165726905edbde602113cd3d446942c561458"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/configuration/spot_with_arm_robot_schema.usd",
+            "source_hash": "571e3ad2e5e973be58a699a64ee0ce6f5914bb97",
+            "target_url": "./configuration/spot_with_arm_robot_schema.usd",
+            "target_hash": "2a8ac6cc06917245e86e125497dfa2c6ec3ef376"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/black_leg.png",
+            "source_hash": "5089d0a79ce9f50638919722aabb8e880dfb73eb",
+            "target_url": "./materials/black_leg.png",
+            "target_hash": "54b3cfd9fbb23774a72e6f79a674b0da8735fcea"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/body_others.png",
+            "source_hash": "97be98ce4db9983185a88b62839355ef330d4ce0",
+            "target_url": "./materials/body_others.png",
+            "target_hash": "df1d8227ea6f75fa5ee038f3fe5b1988a38da914"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/hip.png",
+            "source_hash": "8e7ead240becb550c0eff7156411a1d4fcc3ebd6",
+            "target_url": "./materials/hip.png",
+            "target_hash": "462386988bbf759d29dc9dca4ec8f16cd21c69de"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/lleg.png",
+            "source_hash": "72e6a6ca8a209cb6f1dd8aeec85630624decbf52",
+            "target_url": "./materials/lleg.png",
+            "target_hash": "ef06f485d1b600f26ac578e6a91ea2d1be2d0681"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/yellow_leg.png",
+            "source_hash": "a1e4e0eeac937b5bf6ebae0235035e17417504bd",
+            "target_url": "./materials/yellow_leg.png",
+            "target_hash": "6581851828ab5d2252db8bf76c9a679b092a9e0a"
+        },
+        {
+            "source_url": "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/BostonDynamics/spot/materials/yellow_parts.png",
+            "source_hash": "3942e8197e41443114a12b32516412e241d75952",
+            "target_url": "./materials/yellow_parts.png",
+            "target_hash": "2a42ced658cad87aac66bf0c0c63ef516e68d519"
+        }
+    ]
+}
