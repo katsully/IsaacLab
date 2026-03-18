@@ -181,9 +181,9 @@ SPOT_CFG = ArticulationCfg(
 )
 """Configuration for the Boston Dynamics Spot robot."""
 
-SPOT_CFG_ARM = ArticulationCfg(
+SPOT_ARM_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"/home/wpp/isaacsim/IsaacLab/SPOT_VENICE_ARM_RL_V1/spot_with_arm.usd",
+        usd_path=f"/home/wpp/isaacsim/IsaacLab/Collected_spot_with_arm/spot_with_arm.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
