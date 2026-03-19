@@ -30,10 +30,31 @@ from isaaclab_assets.robots.spot import SPOT_ARM_CFG  # isort: skip
 
 
 
+import isaaclab.terrains as terrain_gen
 
-
-
-
+# We are building a custom generator using the exact 'boxes' from the source code
+COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
+    size=(8.0, 8.0),
+    border_width=20.0,
+    num_rows=10,
+    num_cols=10,
+    horizontal_scale=0.1,
+    vertical_scale=0.005,
+    slope_threshold=0.75,
+    use_cache=False,
+    sub_terrains={
+        # 10% Flat safe-zone to spawn
+        "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.1),
+        
+        # 90% EXACT BOXES FROM DEMO SOURCE
+        "boxes": terrain_gen.MeshRandomGridTerrainCfg(
+            proportion=0.9, 
+            grid_width=0.45, 
+            grid_height_range=(0.05, 0.2), 
+            platform_width=2.0
+        ),
+    },
+)
 
 
 
@@ -58,12 +79,35 @@ from isaaclab_assets.robots.spot import SPOT_ARM_CFG  # isort: skip
 # )
 
 
+# @configclass
+# class SpotActionsCfg:
+#     """Action specifications for the MDP."""
+
+#     joint_pos = mdp.JointPositionActionCfg(asset_name="robot", joint_names=[".*"], scale=0.2, use_default_offset=True)
+
+
 @configclass
 class SpotActionsCfg:
     """Action specifications for the MDP."""
-
-    joint_pos = mdp.JointPositionActionCfg(asset_name="robot", joint_names=[".*"], scale=0.2, use_default_offset=True)
-
+    
+    # 1. THE LEGS: AI Controlled (Scale = 0.2)
+    # The AI uses these 12 values to figure out how to walk.
+    joint_pos = mdp.JointPositionActionCfg(
+        asset_name="robot", 
+        joint_names=[".*_hx", ".*_hy", ".*_kn"], 
+        scale=0.2, 
+        use_default_offset=True
+    )
+    
+    # 2. THE ARM: Locked (Scale = 0.0)
+    # The AI still outputs 7 values for the arm, but we multiply them by 0.0. 
+    # This forces the PD controller to hold the perfect 'spot.py' default offsets.
+    arm_joint_pos = mdp.JointPositionActionCfg(
+        asset_name="robot", 
+        joint_names=[".*arm0.*"], 
+        scale=0.0, 
+        use_default_offset=True
+    )
 
 @configclass
 class SpotCommandsCfg:
@@ -243,17 +287,24 @@ class SpotRewardsCfg:
     )
 
     # -- penalties
-    action_smoothness = RewardTermCfg(func=spot_mdp.action_smoothness_penalty, weight=-1.0)
+    action_smoothness = RewardTermCfg(
+        func=spot_mdp.action_smoothness_penalty, 
+        weight=-5.0
+    )
     air_time_variance = RewardTermCfg(
         func=spot_mdp.air_time_variance_penalty,
         weight=0.0,
         params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_lleg")},
     )
     base_motion = RewardTermCfg(
-        func=spot_mdp.base_motion_penalty, weight=-2.0, params={"asset_cfg": SceneEntityCfg("robot")}
+        func=spot_mdp.base_motion_penalty, 
+        weight=-2.0, 
+        params={"asset_cfg": SceneEntityCfg("robot")}
     )
     base_orientation = RewardTermCfg(
-        func=spot_mdp.base_orientation_penalty, weight=-3.0, params={"asset_cfg": SceneEntityCfg("robot")}
+        func=spot_mdp.base_orientation_penalty, 
+        weight=-5.0, 
+        params={"asset_cfg": SceneEntityCfg("robot")}
     )
     foot_slip = RewardTermCfg(
         func=spot_mdp.foot_slip_penalty,
@@ -266,7 +317,7 @@ class SpotRewardsCfg:
     )
     joint_acc = RewardTermCfg(
         func=spot_mdp.joint_acceleration_penalty,
-        weight=-1.0e-4,
+        weight=-2.5e-4,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_h[xy]")},
     )
     joint_pos = RewardTermCfg(
@@ -280,7 +331,7 @@ class SpotRewardsCfg:
     )
     joint_torques = RewardTermCfg(
         func=spot_mdp.joint_torques_penalty,
-        weight=-5.0e-4,
+        weight=-1.0e-3,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*")},
     )
     joint_vel = RewardTermCfg(
@@ -288,7 +339,6 @@ class SpotRewardsCfg:
         weight=-1.0e-2,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_h[xy]")},
     )
-
 
 @configclass
 class SpotTerminationsCfg:
@@ -347,8 +397,8 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
         # --- ORIENTATION & SPAWN FIXES ---
         # 1. Spawn Height: 0.8 meters ensures the legs don't clip into the floor on frame 1
         # 2. Rotation: (1, 0, 0, 0) is [w, x, y, z], which is exactly upright (Identity)
-        self.scene.robot.init_state.pos = (0.0, 0.0, 0.75)
-        self.scene.robot.init_state.rot = (0.0, 1.0, 0.0, 0.0)
+        self.scene.robot.init_state.pos = (0.0, 0.0, 0.9)
+        self.scene.robot.init_state.rot = (0.0, 0.0, 1.0, 0.0)
 
         
         # Terrain setup
@@ -378,22 +428,46 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
 
 
 class SpotFlatEnvCfg_PLAY(SpotFlatEnvCfg):
-    def __post_init__(self) -> None:
-        # post init of parent
+    def __post_init__(self):
         super().__post_init__()
 
-        # make a smaller scene for play
-        self.scene.num_envs = 50
-        self.scene.env_spacing = 2.5
-        # spawn the robot randomly in the grid (instead of their terrain levels)
-        self.scene.terrain.max_init_terrain_level = None
+        self.decimation = 10 
+        self.episode_length_s = 20.0
+        self.sim.dt = 0.002
+        self.sim.render_interval = self.decimation
+        self.sim.physics_material.static_friction = 1.0
+        self.sim.physics_material.dynamic_friction = 1.0
+        self.sim.physics_material.friction_combine_mode = "multiply"
+        self.sim.physics_material.restitution_combine_mode = "multiply"
+        self.scene.contact_forces.update_period = self.sim.dt
 
-        # reduce the number of terrains to save memory
-        if self.scene.terrain.terrain_generator is not None:
-            self.scene.terrain.terrain_generator.num_rows = 5
-            self.scene.terrain.terrain_generator.num_cols = 5
-            self.scene.terrain.terrain_generator.curriculum = False
+        self.scene.robot = SPOT_ARM_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot") 
 
-        # disable randomization for play
-        self.observations.policy.enable_corruption = False
-        # remove random pushing event
+        # SPAWN & ROTATION
+        self.scene.robot.init_state.pos = (0.0, 0.0, 1.0)
+        self.scene.robot.init_state.rot = (0.0, 0.0, 1.0, 0.0) 
+        # (We removed the joint_pos block here because your spot.py handles it perfectly now!)
+
+        # TERRAIN
+        self.scene.terrain = TerrainImporterCfg(
+            prim_path="/World/ground",
+            terrain_type="generator",
+            terrain_generator=COBBLESTONE_ROAD_CFG,
+            max_init_terrain_level=None, 
+            collision_group=-1,
+            physics_material=sim_utils.RigidBodyMaterialCfg(
+                friction_combine_mode="multiply",
+                restitution_combine_mode="multiply",
+                static_friction=1.0,
+                dynamic_friction=1.0,
+            ),
+            visual_material=sim_utils.MdlFileCfg(
+                mdl_path=f"{ISAACLAB_NUCLEUS_DIR}/Materials/TilesMarbleSpiderWhiteBrickBondHoned/TilesMarbleSpiderWhiteBrickBondHoned.mdl",
+                project_uvw=True,
+                texture_scale=(0.25, 0.25),
+            ),
+            debug_vis=True,
+        )
+
+        self.scene.height_scanner = None
+        self.scene.robot.spawn.articulation_props.enabled_self_collisions = False
