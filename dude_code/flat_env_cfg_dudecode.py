@@ -26,50 +26,23 @@ from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import Lo
 from isaaclab_assets.robots.spot import SPOT_CFG, SPOT_ARM_CFG  # isort: skip
 
 
-# COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
-#     size=(8.0, 8.0),
-#     border_width=20.0,
-#     num_rows=9,
-#     num_cols=21,
-#     horizontal_scale=0.1,
-#     vertical_scale=0.005,
-#     slope_threshold=0.75,
-#     difficulty_range=(0.0, 1.0),
-#     use_cache=False,
-#     sub_terrains={
-#         "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.2),
-#         "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
-#             proportion=0.2, noise_range=(0.02, 0.05), noise_step=0.02, border_width=0.25
-#         ),
-#     },
-# )
-
-
-# We are building a custom generator using the exact 'boxes' from the source code
 COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
     size=(8.0, 8.0),
     border_width=20.0,
-    num_rows=10,
-    num_cols=10,
+    num_rows=9,
+    num_cols=21,
     horizontal_scale=0.1,
     vertical_scale=0.005,
     slope_threshold=0.75,
+    difficulty_range=(0.0, 1.0),
     use_cache=False,
     sub_terrains={
-        # 10% Flat safe-zone to spawn
-        "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.1),
-        
-        # 90% EXACT BOXES FROM DEMO SOURCE
-        "boxes": terrain_gen.MeshRandomGridTerrainCfg(
-            proportion=0.9, 
-            grid_width=0.45, 
-            grid_height_range=(0.05, 0.2), 
-            platform_width=2.0
+        "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.2),
+        "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
+            proportion=0.2, noise_range=(0.02, 0.05), noise_step=0.02, border_width=0.25
         ),
     },
 )
-
-
 
 
 @configclass
@@ -256,28 +229,27 @@ class SpotRewardsCfg:
         },
     )
 
-    # # arm position in stow state
-    # joint_deviation_hip = RewardTermCfg(
-    #     func=spot_mdp.joint_deviation_l1,
-    #     weight=-5,
-    #     params={
-    #         "asset_cfg": SceneEntityCfg(
-    #             "robot",
-    #             joint_names=[
-    #                 "arm0_sh1",
-    #                 "arm0_el0",
-    #                 "arm0_el1",
-    #                 "arm0_sh0",
-    #                 "arm0_wr0",
-    #                 "arm0_wr1",
-    #                 "arm0_f1x",
-    #             ],
-    #         )
-    #     },
-    # )
+    # arm position in stow state
+    joint_deviation_hip = RewardTermCfg(
+        func=spot_mdp.joint_deviation_l1,
+        weight=-5,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    "arm0_sh1",
+                    "arm0_el0",
+                    "arm0_el1",
+                    "arm0_sh0",
+                    "arm0_wr0",
+                    "arm0_wr1",
+                    "arm0_f1x",
+                ],
+            )
+        },
+    )
 
     # -- penalties
-
     action_smoothness = RewardTermCfg(func=spot_mdp.action_smoothness_penalty, weight=-1.0)
     air_time_variance = RewardTermCfg(
         func=spot_mdp.air_time_variance_penalty,
@@ -288,7 +260,6 @@ class SpotRewardsCfg:
         func=spot_mdp.base_motion_penalty, weight=-2.0, params={"asset_cfg": SceneEntityCfg("robot")}
     )
     base_orientation = RewardTermCfg(
-
         func=spot_mdp.base_orientation_penalty, weight=-3.0, params={"asset_cfg": SceneEntityCfg("robot")}
     )
     foot_slip = RewardTermCfg(
@@ -428,7 +399,6 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
             debug_vis=True,
         )
 
-
         # no height scan
         self.scene.height_scanner = None
 
@@ -450,10 +420,8 @@ class SpotFlatEnvCfg_PLAY(SpotFlatEnvCfg):
             self.scene.terrain.terrain_generator.num_cols = 5
             self.scene.terrain.terrain_generator.curriculum = False
 
-
         # disable randomization for play
         self.observations.policy.enable_corruption = False
         # remove random pushing event
         # self.events.base_external_force_torque = None
         # self.events.push_robot = None
-
