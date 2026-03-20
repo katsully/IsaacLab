@@ -184,7 +184,7 @@ SPOT_CFG = ArticulationCfg(
 
 SPOT_ARM_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"/home/partnersteam2/isaac_lab_spot/IsaacLab/SPOT_VENICE_ARM_RL_V1/spot_with_arm.usd",
+        usd_path=f"/home/partnersteam2/IsaacRobotics/assets/Collected_spot_arm/spot_arm.usda",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
