@@ -184,7 +184,7 @@ SPOT_CFG = ArticulationCfg(
 
 SPOT_ARM_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"/home/wpp/isaacsim/IsaacLab/SPOT_VENICE_ARM_RL_V1/spot_with_arm.usd",
+        usd_path=f"/home/partnersteam2/IsaacRobotics/assets/Collected_spot_arm/spot_arm.usda",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
@@ -209,8 +209,8 @@ SPOT_ARM_CFG = ArticulationCfg(
             ".*_kn": -1.5,  
             # --- THE TUCKED ARM DEFAULTS ---
             ".*arm0_sh0": 0.0,
-            ".*arm0_sh1": -2.8,
-            ".*arm0_el0": 2.8,
+            ".*arm0_sh1": -2.6,
+            ".*arm0_el0": 2.6,
             ".*arm0_el1": 0.0,
             ".*arm0_wr0": 0.0,
             ".*arm0_wr1": 0.0,
