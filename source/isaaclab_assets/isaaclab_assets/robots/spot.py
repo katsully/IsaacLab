@@ -17,6 +17,10 @@ import os
 from isaaclab.actuators import DelayedPDActuatorCfg, RemotizedPDActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
+<<<<<<< HEAD
+=======
+from isaaclab.actuators import ImplicitActuatorCfg
+>>>>>>> b51aaf145cb0e7547ded0d8a05ba5cc300d9c513
 
 # Note: This data was collected by the Boston Dynamics AI Institute.
 joint_parameter_lookup = [
@@ -201,105 +205,66 @@ SPOT_ARM_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.7),
+        pos=(0.0, 0.0, 0.65),
         joint_pos={
             "[fh]l_hx": 0.1,  # all left hip_x
             "[fh]r_hx": -0.1,  # all right hip_x
             "f[rl]_hy": 0.9,  # front hip_y
             "h[rl]_hy": 1.1,  # hind hip_y
             ".*_kn": -1.5,  # all knees
-            "arm0_sh1": -3.13,
-            "arm0_el0": 3.13,
-            "arm0_el1": 0,
-            "arm0_sh0": 0,
-            "arm0_wr0": 0, 
-            "arm0_wr1": 0,
-            "arm0_f1x": 0
+            "arm0_sh1": -2.7,
+            "arm0_el0": 2.7,
+            "arm0_el1": 0.01,
+            "arm0_sh0": 0.1,
+            "arm0_wr0": 0.1, 
+            "arm0_wr1": 0.1,
+            "arm0_f1x": -0.1
         },
         joint_vel={".*": 0.0},
     ),
-    actuators={
-        "spot_hip": DelayedPDActuatorCfg(
-            joint_names_expr=[".*_h[xy]"],
-            effort_limit=45.0,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_knee": RemotizedPDActuatorCfg(
-            joint_names_expr=[".*_kn"],
-            joint_parameter_lookup=joint_parameter_lookup,
-            effort_limit=None,  # torque limits are handled based experimental data (`RemotizedPDActuatorCfg.data`)
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_sh1": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_sh1"],
-            effort_limit=181.8,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_el0": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_el0"],
-            effort_limit=90.9,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_el1": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_el1"],
-            effort_limit=30.3,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_wr0": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_wr0"],
-            effort_limit=30.3,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_wr1": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_wr1"],
-            effort_limit=30.3,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_f1x": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_f1x"],
-            effort_limit=15.32,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05
-        ),
-        "spot_sh0": DelayedPDActuatorCfg(
-            joint_names_expr=["arm0_sh0"],
-            effort_limit=90.3,
-            stiffness=60.0,
-            damping=1.5,
-            min_delay=0,  # physics time steps (min: 2.0*0=0.0ms)
-            max_delay=4,  # physics time steps (max: 2.0*4=8.0ms)
-            friction=0.05 
-        ),
-    },
+      actuators={
+      # Leg actuators - unchanged
+      "spot_hip": DelayedPDActuatorCfg(
+          joint_names_expr=[".*_h[xy]"],
+          effort_limit=45.0,
+          stiffness=60.0,
+          damping=1.5,
+          min_delay=0,
+          max_delay=4,
+          friction=0.05
+      ),
+      "spot_knee": RemotizedPDActuatorCfg(
+          joint_names_expr=[".*_kn"],
+          joint_parameter_lookup=joint_parameter_lookup,
+          effort_limit=None,
+          stiffness=60.0,
+          damping=1.5,
+          min_delay=0,
+          max_delay=4,
+          friction=0.05
+      ),
+      
+      # ARM JOINTS - switch to ImplicitActuatorCfg
+      # PhysX holds these at init_state position without needing action targets
+      "spot_arm_shoulder": ImplicitActuatorCfg(
+          joint_names_expr=["arm0_sh0", "arm0_sh1"],
+          stiffness=400.0,    # holds firmly at filming position
+          damping=20.0,
+      ),
+      "spot_arm_elbow": ImplicitActuatorCfg(
+          joint_names_expr=["arm0_el0", "arm0_el1"],
+          stiffness=300.0,
+          damping=15.0,
+      ),
+      "spot_arm_wrist": ImplicitActuatorCfg(
+          joint_names_expr=["arm0_wr0", "arm0_wr1"],
+          stiffness=200.0,
+          damping=10.0,
+      ),
+      "spot_arm_finger": ImplicitActuatorCfg(
+          joint_names_expr=["arm0_f1x"],
+          stiffness=100.0,
+          damping=5.0,
+      ),
+  },
 )
