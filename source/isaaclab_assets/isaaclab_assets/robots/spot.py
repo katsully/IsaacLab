@@ -17,10 +17,7 @@ import os
 from isaaclab.actuators import DelayedPDActuatorCfg, RemotizedPDActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
-<<<<<<< HEAD
-=======
 from isaaclab.actuators import ImplicitActuatorCfg
->>>>>>> b51aaf145cb0e7547ded0d8a05ba5cc300d9c513
 
 # Note: This data was collected by the Boston Dynamics AI Institute.
 joint_parameter_lookup = [

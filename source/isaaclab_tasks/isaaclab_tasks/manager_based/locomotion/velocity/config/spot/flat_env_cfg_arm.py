@@ -266,7 +266,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
-            "mode_time": 0.1,
+            "mode_time": 0.4, # this variable being isolated for testing
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -480,7 +480,7 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.obstacle = RigidObjectCfg(
             prim_path="{ENV_REGEX_NS}/Obstacle",
             spawn=sim_utils.UsdFileCfg(
-                usd_path="/home/partnersteam2/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
+                usd_path="/home/wpp/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
                 rigid_props=sim_utils.RigidBodyPropertiesCfg(
                     kinematic_enabled=True  # Freezes the object in place (acts like a solid wall)
                 ),
