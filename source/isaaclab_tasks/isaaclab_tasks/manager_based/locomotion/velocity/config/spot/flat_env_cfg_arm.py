@@ -230,7 +230,7 @@ class SpotRewardsCfg:
     )
     base_linear_velocity = RewardTermCfg(
         func=spot_mdp.base_linear_velocity_reward,
-        weight=5.0,
+        weight=10.0,
         params={"std": 1.0, "ramp_rate": 0.5, "ramp_at_vel": 1.0, "asset_cfg": SceneEntityCfg("robot")},
     )
     foot_clearance = RewardTermCfg(
@@ -256,25 +256,25 @@ class SpotRewardsCfg:
         },
     )
 
-    # # arm position in stow state
-    # joint_deviation_hip = RewardTermCfg(
-    #     func=spot_mdp.joint_deviation_l1,
-    #     weight=-5,
-    #     params={
-    #         "asset_cfg": SceneEntityCfg(
-    #             "robot",
-    #             joint_names=[
-    #                 "arm0_sh1",
-    #                 "arm0_el0",
-    #                 "arm0_el1",
-    #                 "arm0_sh0",
-    #                 "arm0_wr0",
-    #                 "arm0_wr1",
-    #                 "arm0_f1x",
-    #             ],
-    #         )
-    #     },
-    # )
+    # arm position in stow state
+    joint_deviation_hip = RewardTermCfg(
+        func=spot_mdp.joint_deviation_l1,
+        weight=-5,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    "arm0_sh1",
+                    "arm0_el0",
+                    "arm0_el1",
+                    "arm0_sh0",
+                    "arm0_wr0",
+                    "arm0_wr1",
+                    "arm0_f1x",
+                ],
+            )
+        },
+    )
 
     # -- penalties
 

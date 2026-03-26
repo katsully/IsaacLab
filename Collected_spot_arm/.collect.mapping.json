@@ -1,0 +1,41 @@
+{
+    "version": "1.0",
+    "file_records": [
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/black_leg.png",
+            "source_hash": "30b7b20283deec15ed720864908439b13d708617",
+            "target_url": "./materials/black_leg.png",
+            "target_hash": "821590e13956943533c7f1ec71375190308ee523"
+        },
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/body_others.png",
+            "source_hash": "f37bf29de9be18bc09365c6653d05a5b22895d77",
+            "target_url": "./materials/body_others.png",
+            "target_hash": "3b5ec89a785a244753ed5bf0de401fb6755507bf"
+        },
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/hip.png",
+            "source_hash": "ff660e3246a4bf192b221f05ce20bfc76a1db6d4",
+            "target_url": "./materials/hip.png",
+            "target_hash": "4b1a4d72f5ffac485841e824a81fc16b032bb218"
+        },
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/lleg.png",
+            "source_hash": "d7a69308254879463b991c3ea1b5f2a86a0f6b30",
+            "target_url": "./materials/lleg.png",
+            "target_hash": "005aa30b097c269f44e5593d240e2694cf1d5f44"
+        },
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/yellow_leg.png",
+            "source_hash": "3d2328aed8a07c91db673f0ffb3173d27a7f8779",
+            "target_url": "./materials/yellow_leg.png",
+            "target_hash": "a86864ca08ad5cb4be54d8bb8fdbd90e50eeee5a"
+        },
+        {
+            "source_url": "/home/partnersteam2/IsaacRobotics/assets/materials/yellow_parts.png",
+            "source_hash": "cfac8d0b0eceac5ed6215922b5b4a97ac1f55f57",
+            "target_url": "./materials/yellow_parts.png",
+            "target_hash": "a342aa7331368c48c6b17e9d0e79336e63313650"
+        }
+    ]
+}
