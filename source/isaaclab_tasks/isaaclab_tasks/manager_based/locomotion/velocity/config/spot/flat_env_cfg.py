@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2026, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# Copyright (c) 2022-2025, The Isaac Lab Project Developers.
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
@@ -23,7 +23,7 @@ from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import Lo
 ##
 # Pre-defined configs
 ##
-from isaaclab_assets.robots.spot import SPOT_CFG  # isort: skip
+from isaaclab_assets.robots.spot import SPOT_CFG, SPOT_ARM_CFG  # isort: skip
 
 
 COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
@@ -229,6 +229,26 @@ class SpotRewardsCfg:
         },
     )
 
+    # arm position in stow state
+    joint_deviation_hip = RewardTermCfg(
+        func=spot_mdp.joint_deviation_l1,
+        weight=-5,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    "arm0_sh1",
+                    "arm0_el0",
+                    "arm0_el1",
+                    "arm0_sh0",
+                    "arm0_wr0",
+                    "arm0_wr1",
+                    "arm0_f1x",
+                ],
+            )
+        },
+    )
+
     # -- penalties
     action_smoothness = RewardTermCfg(func=spot_mdp.action_smoothness_penalty, weight=-1.0)
     air_time_variance = RewardTermCfg(
@@ -254,7 +274,21 @@ class SpotRewardsCfg:
     joint_acc = RewardTermCfg(
         func=spot_mdp.joint_acceleration_penalty,
         weight=-1.0e-4,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_h[xy]")},
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    ".*_h[xy]",
+                    "arm0_sh1",
+                    "arm0_el0",
+                    "arm0_el1",
+                    "arm0_sh0",
+                    "arm0_wr0",
+                    "arm0_wr1",
+                    "arm0_f1x",
+                ],
+            )
+        },
     )
     joint_pos = RewardTermCfg(
         func=spot_mdp.joint_position_penalty,
@@ -273,7 +307,21 @@ class SpotRewardsCfg:
     joint_vel = RewardTermCfg(
         func=spot_mdp.joint_velocity_penalty,
         weight=-1.0e-2,
-        params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_h[xy]")},
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[
+                    ".*_h[xy]",
+                    "arm0_sh1",
+                    "arm0_el0",
+                    "arm0_el1",
+                    "arm0_sh0",
+                    "arm0_wr0",
+                    "arm0_wr1",
+                    "arm0_f1x",
+                ],
+            )
+        },
     )
 
 
@@ -295,9 +343,8 @@ class SpotTerminationsCfg:
 
 @configclass
 class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
-    """Configuration for the Spot robot in a flat environment."""
 
-    # Basic settings
+    # Basic settings'
     observations: SpotObservationsCfg = SpotObservationsCfg()
     actions: SpotActionsCfg = SpotActionsCfg()
     commands: SpotCommandsCfg = SpotCommandsCfg()
@@ -329,7 +376,7 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.contact_forces.update_period = self.sim.dt
 
         # switch robot to Spot-d
-        self.scene.robot = SPOT_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        self.scene.robot = SPOT_ARM_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 
         # terrain
         self.scene.terrain = TerrainImporterCfg(
@@ -376,3 +423,5 @@ class SpotFlatEnvCfg_PLAY(SpotFlatEnvCfg):
         # disable randomization for play
         self.observations.policy.enable_corruption = False
         # remove random pushing event
+        # self.events.base_external_force_torque = None
+        # self.events.push_robot = None

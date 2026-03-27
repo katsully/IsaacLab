@@ -324,7 +324,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
-            "mode_time": 0.08,
+            "mode_time": 0.1,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -337,7 +337,7 @@ class SpotRewardsCfg:
     )
     base_linear_velocity = RewardTermCfg(
         func=spot_mdp.base_linear_velocity_reward,
-        weight=5.0,
+        weight=10.0,
         params={"std": 1.0, "ramp_rate": 0.5, "ramp_at_vel": 1.0, "asset_cfg": SceneEntityCfg("robot")},
     )
     foot_clearance = RewardTermCfg(
@@ -532,16 +532,18 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
             ),
             debug_vis=False,
         )
-        # # NEW: The UR10 Mount Object (Larger & Static)
-        # self.scene.obstacle = RigidObjectCfg(
-        #     prim_path="{ENV_REGEX_NS}/Obstacle",
-        #     spawn=sim_utils.UsdFileCfg(
-        #         usd_path="/home/partnersteam2/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
-        #         rigid_props=sim_utils.RigidBodyPropertiesCfg(
-        #             kinematic_enabled=True  # Freezes the object in place (acts like a solid wall)
-        #         ),
-        #         scale=(1.8, 1.8, 1.8), # Change this to 3.0 or 4.0 if you need it even bigger!
-        #     ),
+
+        # NEW: The UR10 Mount Object
+        # NEW: The UR10 Mount Object (Larger & Static)
+        self.scene.obstacle = RigidObjectCfg(
+            prim_path="{ENV_REGEX_NS}/Obstacle",
+            spawn=sim_utils.UsdFileCfg(
+                usd_path="/home/partnersteam2/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
+                rigid_props=sim_utils.RigidBodyPropertiesCfg(
+                    kinematic_enabled=True  # Freezes the object in place (acts like a solid wall)
+                ),
+                scale=(1.8, 1.8, 1.8), # Change this to 3.0 or 4.0 if you need it even bigger!
+            ),
 
         #     init_state=RigidObjectCfg.InitialStateCfg(pos=(1.0, 0.0, 1.0)), 
         # )
