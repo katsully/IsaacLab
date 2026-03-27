@@ -20,13 +20,53 @@ import isaaclab_tasks.manager_based.locomotion.velocity.config.spot.mdp as spot_
 import isaaclab_tasks.manager_based.locomotion.velocity.mdp as mdp
 from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
 
-from isaaclab.assets import RigidObjectCfg
-
+# from isaaclab.assets import RigidObjectCfg
+# from .custom_terrains import RoughWithPlinthsTerrainCfg
 
 ##
 # Pre-defined configs
 ##
 from isaaclab_assets.robots.spot import SPOT_CFG, SPOT_ARM_CFG  # isort: skip
+
+
+# COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
+#   size=(8.0, 8.0),
+#   border_width=20.0,
+#   num_rows=9,
+#   num_cols=21,
+#   horizontal_scale=0.1,
+#   vertical_scale=0.005,
+#   slope_threshold=0.75,
+#   difficulty_range=(0.0, 1.0),
+#   use_cache=False,
+#   sub_terrains={
+#       # Easy start - flat floor, no plinths
+#       "flat": terrain_gen.MeshPlaneTerrainCfg(
+#           proportion=0.1,
+#       ),
+#       # Medium - gentle rough terrain WITH plinths
+#       "rough_plinths_easy": RoughWithPlinthsTerrainCfg(
+#           proportion=0.45,
+#           noise_range=(0.02, 0.05),   # gentle roughness
+#           noise_step=0.02,
+#           obstacle_width_range=(0.5, 0.7),
+#           obstacle_height_range=(0.9, 1.2),
+#           num_obstacles=2,
+#           platform_width=2.0,
+#       ),
+#       # Hard - very rough terrain WITH plinths
+#       "rough_plinths_hard": RoughWithPlinthsTerrainCfg(
+#           proportion=0.45,
+#           noise_range=(0.05, 0.15),   # much rougher
+#           noise_step=0.02,
+#           obstacle_width_range=(0.4, 0.8),
+#           obstacle_height_range=(0.9, 1.5),
+#           num_obstacles=3,            # more plinths
+#           platform_width=1.5,         # smaller safe zone
+#       ),
+#   },
+# )
+
 
 
 COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
@@ -42,7 +82,17 @@ COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
     sub_terrains={
         "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.2),
         "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
-            proportion=0.2, noise_range=(0.02, 0.05), noise_step=0.02, border_width=0.25
+            proportion=0.6, noise_range=(0.02, 0.08), noise_step=0.02, border_width=0.25
+        ),
+         # Isolated pillars on flat floor - no holes
+        "obstacles": terrain_gen.HfDiscreteObstaclesTerrainCfg(
+            proportion=0.9,
+            obstacle_height_mode="fixed",
+            obstacle_width_range=(0.5, 0.7),
+            obstacle_height_range=(0.9, 1.2),
+            num_obstacles=2,
+            platform_width=3.0,
+            
         ),
     },
 )
@@ -75,10 +125,18 @@ COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
 class SpotActionsCfg:
     """Action specifications for the MDP."""
 
-    joint_pos = mdp.JointPositionActionCfg(
+    joint_pos_hip = mdp.JointPositionActionCfg(
       asset_name="robot",
-      joint_names=[".*_h[xy]", ".*_kn"],
+      joint_names=[".*_h[xy]"],
       scale=0.2,
+      use_default_offset=True
+  )
+
+    #knees sepereated to allow more deviation
+    joint_pos_knee = mdp.JointPositionActionCfg(
+      asset_name="robot",
+      joint_names=[".*_kn"],
+      scale=0.5,
       use_default_offset=True
   )
 
@@ -236,16 +294,16 @@ class SpotEventCfg:
   )
 
 
-    # NEW: Randomize the UR10 Mount position on every reset
-    reset_obstacle_position = EventTerm(
-        func=mdp.reset_root_state_uniform,
-        mode="reset",
-        params={
-            "asset_cfg": SceneEntityCfg("obstacle"), 
-            "pose_range": {"x": (1.0, 4.0), "y": (-2.0, 2.0), "yaw": (-3.14, 3.14)}, 
-            "velocity_range": {},
-        },
-    )
+    # # NEW: Randomize the UR10 Mount position on every reset
+    # reset_obstacle_position = EventTerm(
+    #     func=mdp.reset_root_state_uniform,
+    #     mode="reset",
+    #     params={
+    #         "asset_cfg": SceneEntityCfg("obstacle"), 
+    #         "pose_range": {"x": (1.0, 4.0), "y": (-2.0, 2.0), "yaw": (-3.14, 3.14)}, 
+    #         "velocity_range": {},
+    #     },
+    # )
 
     # interval
     push_robot = EventTerm(
@@ -266,7 +324,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
-            "mode_time": 0.4, # this variable being isolated for testing
+            "mode_time": 0.1,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -368,7 +426,7 @@ class SpotRewardsCfg:
     )
     joint_pos = RewardTermCfg(
         func=spot_mdp.joint_position_penalty,
-        weight=-0.7,
+        weight=-1.5,
         params={
             "asset_cfg": SceneEntityCfg("robot", joint_names=".*"),
             "stand_still_scale": 5.0,
@@ -480,15 +538,15 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.obstacle = RigidObjectCfg(
             prim_path="{ENV_REGEX_NS}/Obstacle",
             spawn=sim_utils.UsdFileCfg(
-                usd_path="/home/wpp/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
+                usd_path="/home/partnersteam2/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
                 rigid_props=sim_utils.RigidBodyPropertiesCfg(
                     kinematic_enabled=True  # Freezes the object in place (acts like a solid wall)
                 ),
                 scale=(1.8, 1.8, 1.8), # Change this to 3.0 or 4.0 if you need it even bigger!
             ),
 
-            init_state=RigidObjectCfg.InitialStateCfg(pos=(1.0, 0.0, 1.0)), 
-        )
+        #     init_state=RigidObjectCfg.InitialStateCfg(pos=(1.0, 0.0, 1.0)), 
+        # )
 
         # no height scan
         self.scene.height_scanner = None
