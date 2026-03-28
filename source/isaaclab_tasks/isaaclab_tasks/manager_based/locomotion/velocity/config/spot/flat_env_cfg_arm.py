@@ -324,6 +324,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
+
             "mode_time": 0.06,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
