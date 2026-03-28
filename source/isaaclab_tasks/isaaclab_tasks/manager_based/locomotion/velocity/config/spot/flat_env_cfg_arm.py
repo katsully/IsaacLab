@@ -324,7 +324,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
-            "mode_time": 0.08,
+            "mode_time": 0.05,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -352,7 +352,7 @@ class SpotRewardsCfg:
     )
     gait = RewardTermCfg(
         func=spot_mdp.GaitReward,
-        weight=15.0,
+        weight=5.0,
         params={
             "std": 0.1,
             "max_err": 0.2,
