@@ -21,7 +21,7 @@ import isaaclab_tasks.manager_based.locomotion.velocity.mdp as mdp
 from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
 
 # from isaaclab.assets import RigidObjectCfg
-# from .custom_terrains import RoughWithPlinthsTerrainCfg
+from .custom_terrains import RoughWithPlinthsTerrainCfg
 
 ##
 # Pre-defined configs
@@ -29,73 +29,73 @@ from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import Lo
 from isaaclab_assets.robots.spot import SPOT_CFG, SPOT_ARM_CFG  # isort: skip
 
 
-# COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
-#   size=(8.0, 8.0),
-#   border_width=20.0,
-#   num_rows=9,
-#   num_cols=21,
-#   horizontal_scale=0.1,
-#   vertical_scale=0.005,
-#   slope_threshold=0.75,
-#   difficulty_range=(0.0, 1.0),
-#   use_cache=False,
-#   sub_terrains={
-#       # Easy start - flat floor, no plinths
-#       "flat": terrain_gen.MeshPlaneTerrainCfg(
-#           proportion=0.1,
-#       ),
-#       # Medium - gentle rough terrain WITH plinths
-#       "rough_plinths_easy": RoughWithPlinthsTerrainCfg(
-#           proportion=0.45,
-#           noise_range=(0.02, 0.05),   # gentle roughness
-#           noise_step=0.02,
-#           obstacle_width_range=(0.5, 0.7),
-#           obstacle_height_range=(0.9, 1.2),
-#           num_obstacles=2,
-#           platform_width=2.0,
-#       ),
-#       # Hard - very rough terrain WITH plinths
-#       "rough_plinths_hard": RoughWithPlinthsTerrainCfg(
-#           proportion=0.45,
-#           noise_range=(0.05, 0.15),   # much rougher
-#           noise_step=0.02,
-#           obstacle_width_range=(0.4, 0.8),
-#           obstacle_height_range=(0.9, 1.5),
-#           num_obstacles=3,            # more plinths
-#           platform_width=1.5,         # smaller safe zone
-#       ),
-#   },
-# )
-
-
-
-COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(# ✅ NO flat platform - terrain is rough throughout
-    size=(8.0, 8.0),
-    border_width=20.0,
-    num_rows=9,
-    num_cols=21,
-    horizontal_scale=0.1,
-    vertical_scale=0.005,
-    slope_threshold=0.75,
-    difficulty_range=(0.0, 1.0),
-    use_cache=False,
-    sub_terrains={
-        "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.2),
-        "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
-            proportion=0.6, noise_range=(0.02, 0.08), noise_step=0.02, border_width=0.25
-        ),
-         # Isolated pillars on flat floor - no holes
-        "obstacles": terrain_gen.HfDiscreteObstaclesTerrainCfg(
-            proportion=0.9,
-            obstacle_height_mode="fixed",
-            obstacle_width_range=(0.5, 0.7),
-            obstacle_height_range=(0.9, 1.2),
-            num_obstacles=2,
-            platform_width=3.0,
-            
-        ),
-    },
+COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
+  size=(8.0, 8.0),
+  border_width=20.0,
+  num_rows=9,
+  num_cols=21,
+  horizontal_scale=0.1,
+  vertical_scale=0.005,
+  slope_threshold=0.75,
+  difficulty_range=(0.0, 1.0),
+  use_cache=False,
+  sub_terrains={
+      # Easy start - flat floor, no plinths
+      "flat": terrain_gen.MeshPlaneTerrainCfg(
+          proportion=0.1,
+      ),
+      # Medium - gentle rough terrain WITH plinths
+      "rough_plinths_easy": RoughWithPlinthsTerrainCfg(
+          proportion=0.45,
+          noise_range=(0.01, 0.03),   # gentle roughness
+          noise_step=0.02,
+          obstacle_width_range=(0.3, 0.45),
+          obstacle_height_range=(0.8, 1.0),
+          num_obstacles=1,
+          platform_width=2.0,
+      ),
+      # Hard - very rough terrain WITH plinths
+      "rough_plinths_hard": RoughWithPlinthsTerrainCfg(
+          proportion=0.45,
+          noise_range=(0.04, 0.14),   # much rougher
+          noise_step=0.02,
+          obstacle_width_range=(0.2, 0.3),
+          obstacle_height_range=(0.8, 1.0),
+          num_obstacles=1,            # more plinths
+          platform_width=1.5,         # smaller safe zone
+      ),
+  },
 )
+
+
+
+# COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(# ✅ NO flat platform - terrain is rough throughout
+#     size=(8.0, 8.0),
+#     border_width=20.0,
+#     num_rows=9,
+#     num_cols=21,
+#     horizontal_scale=0.1,
+#     vertical_scale=0.005,
+#     slope_threshold=0.75,
+#     difficulty_range=(0.0, 1.0),
+#     use_cache=False,
+#     sub_terrains={
+#         "flat": terrain_gen.MeshPlaneTerrainCfg(proportion=0.2),
+#         "random_rough": terrain_gen.HfRandomUniformTerrainCfg(
+#             proportion=0.6, noise_range=(0.02, 0.08), noise_step=0.02, border_width=0.25
+#         ),
+#          # Isolated pillars on flat floor - no holes
+#         "obstacles": terrain_gen.HfDiscreteObstaclesTerrainCfg(
+#             proportion=0.9,
+#             obstacle_height_mode="fixed",
+#             obstacle_width_range=(0.5, 0.7),
+#             obstacle_height_range=(0.9, 1.2),
+#             num_obstacles=2,
+#             platform_width=3.0,
+            
+#         ),
+#     },
+# )
 
 # # We are building a custom generator using the exact 'boxes' from the source code
 # COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
@@ -324,7 +324,7 @@ class SpotRewardsCfg:
         func=spot_mdp.air_time_reward,
         weight=2.0,
         params={
-            "mode_time": 0.08,
+            "mode_time": 0.06,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -352,7 +352,7 @@ class SpotRewardsCfg:
     )
     gait = RewardTermCfg(
         func=spot_mdp.GaitReward,
-        weight=15.0,
+        weight=5.0,
         params={
             "std": 0.1,
             "max_err": 0.2,
@@ -384,7 +384,7 @@ class SpotRewardsCfg:
     )
 
     # -- penalties
-    action_smoothness = RewardTermCfg(func=spot_mdp.action_smoothness_penalty, weight=-2.5)
+    action_smoothness = RewardTermCfg(func=spot_mdp.action_smoothness_penalty, weight=-1.5)
     air_time_variance = RewardTermCfg(
         func=spot_mdp.air_time_variance_penalty,
         weight=-1.0,
