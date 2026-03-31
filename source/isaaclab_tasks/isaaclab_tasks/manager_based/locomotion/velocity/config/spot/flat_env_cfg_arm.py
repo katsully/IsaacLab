@@ -47,7 +47,7 @@ COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
       # Medium - gentle rough terrain WITH plinths
       "rough_plinths_easy": RoughWithPlinthsTerrainCfg(
           proportion=0.45,
-          noise_range=(0.01, 0.03),   # gentle roughness
+          noise_range=(0.03, 0.07),   # gentle roughness
           noise_step=0.02,
           obstacle_width_range=(0.3, 0.45),
           obstacle_height_range=(0.8, 1.0),
@@ -57,11 +57,11 @@ COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
       # Hard - very rough terrain WITH plinths
       "rough_plinths_hard": RoughWithPlinthsTerrainCfg(
           proportion=0.45,
-          noise_range=(0.04, 0.14),   # much rougher
+          noise_range=(0.07, 0.18),   # much rougher
           noise_step=0.02,
           obstacle_width_range=(0.2, 0.3),
           obstacle_height_range=(0.8, 1.0),
-          num_obstacles=1,            # more plinths
+          num_obstacles=2,            # more plinths
           platform_width=1.5,         # smaller safe zone
       ),
   },
@@ -128,7 +128,7 @@ class SpotActionsCfg:
     joint_pos_hip = mdp.JointPositionActionCfg(
       asset_name="robot",
       joint_names=[".*_h[xy]"],
-      scale=0.2,
+      scale=0.1,
       use_default_offset=True
   )
 
@@ -163,7 +163,7 @@ class SpotCommandsCfg:
         heading_command=False,
         debug_vis=False,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(0.5, 1.0), lin_vel_y=(-0.1, 0.1), ang_vel_z=(-0.5, 0.5)
+            lin_vel_x=(0.5, 1.5), lin_vel_y=(-0.1, 0.1), ang_vel_z=(-0.5, 0.5)
         ),
     )
 
@@ -353,7 +353,7 @@ class SpotRewardsCfg:
     )
     gait = RewardTermCfg(
         func=spot_mdp.GaitReward,
-        weight=5.0,
+        weight=10.0,
         params={
             "std": 0.1,
             "max_err": 0.2,
@@ -526,10 +526,9 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
                 static_friction=1.0,
                 dynamic_friction=1.0,
             ),
-            visual_material=sim_utils.MdlFileCfg(
-                mdl_path=f"{ISAACLAB_NUCLEUS_DIR}/Materials/TilesMarbleSpiderWhiteBrickBondHoned/TilesMarbleSpiderWhiteBrickBondHoned.mdl",
-                project_uvw=True,
-                texture_scale=(0.25, 0.25),
+            visual_material=sim_utils.PreviewSurfaceCfg(
+                diffuse_color=(0.35, 0.5, 0.25),
+                roughness=0.9,
             ),
             debug_vis=False,
         )
@@ -576,7 +575,7 @@ class SpotFlatEnvCfg_PLAY(SpotFlatEnvCfg):
         self.commands.base_velocity.rel_standing_envs = 0.0  # no standing
         self.commands.base_velocity.rel_heading_envs = 0.0
         self.commands.base_velocity.ranges = mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(0.8, 1.0),   # consistent walking speed
+            lin_vel_x=(0.8, 1.3),   # consistent walking speed
             lin_vel_y=(-0.5, 0.5),   # no sideways
             ang_vel_z=(-0.5, 0.5),   # no turning
         )

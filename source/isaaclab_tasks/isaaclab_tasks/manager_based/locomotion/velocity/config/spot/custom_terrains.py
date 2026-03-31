@@ -5,6 +5,7 @@ import numpy as np
 import trimesh
 from isaaclab.terrains import SubTerrainBaseCfg
 from isaaclab.utils import configclass
+from scipy.ndimage import zoom
 
 def rough_terrain_with_plinths(difficulty: float, cfg) -> tuple:
     """Returns ([mesh, plinth1, plinth2...], origin) for Isaac Lab."""
@@ -24,7 +25,15 @@ def rough_terrain_with_plinths(difficulty: float, cfg) -> tuple:
     xs = np.linspace(0.0, width, rows)
     ys = np.linspace(0.0, length, cols)
     xx, yy = np.meshgrid(xs, ys, indexing="ij")
-    zz = np.random.uniform(-noise_amplitude, noise_amplitude, (rows, cols))
+
+    # Smooth rolling hills - coarse noise interpolated to fine grid
+    coarse_step = 0.7
+    coarse_rows = max(2, int(width / coarse_step) + 1)
+    coarse_cols = max(2, int(length / coarse_step) + 1)
+    coarse_zz = np.random.uniform(-noise_amplitude, noise_amplitude, (coarse_rows, coarse_cols))
+    zoom_factor = (rows / coarse_rows, cols / coarse_cols)
+    zz = zoom(coarse_zz, zoom_factor, order=3)
+    zz = zz[:rows, :cols]
 
     # Smooth border - fade to 0 at tile edges
     border_width = 1.0
