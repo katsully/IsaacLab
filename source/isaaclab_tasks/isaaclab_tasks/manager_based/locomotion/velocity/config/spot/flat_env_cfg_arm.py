@@ -21,6 +21,7 @@ import isaaclab_tasks.manager_based.locomotion.velocity.mdp as mdp
 from isaaclab_tasks.manager_based.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
 
 # from isaaclab.assets import RigidObjectCfg
+from isaaclab.assets import AssetBaseCfg
 from .custom_terrains import RoughWithPlinthsTerrainCfg
 
 ##
@@ -57,11 +58,11 @@ COBBLESTONE_ROAD_CFG = terrain_gen.TerrainGeneratorCfg(
       # Hard - very rough terrain WITH plinths
       "rough_plinths_hard": RoughWithPlinthsTerrainCfg(
           proportion=0.45,
-          noise_range=(0.07, 0.18),   # much rougher
+          noise_range=(0.07, 0.2),   # much rougher
           noise_step=0.02,
           obstacle_width_range=(0.2, 0.3),
           obstacle_height_range=(0.8, 1.0),
-          num_obstacles=2,            # more plinths
+          num_obstacles=1,            # more plinths
           platform_width=1.5,         # smaller safe zone
       ),
   },
@@ -128,7 +129,7 @@ class SpotActionsCfg:
     joint_pos_hip = mdp.JointPositionActionCfg(
       asset_name="robot",
       joint_names=[".*_h[xy]"],
-      scale=0.1,
+      scale=0.25,
       use_default_offset=True
   )
 
@@ -325,7 +326,7 @@ class SpotRewardsCfg:
         weight=2.0,
         params={
 
-            "mode_time": 0.06,
+            "mode_time": 0.15,
             "velocity_threshold": 0.5,
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg("contact_forces", body_names=".*_foot"),
@@ -527,16 +528,27 @@ class SpotFlatEnvCfg(LocomotionVelocityRoughEnvCfg):
                 dynamic_friction=1.0,
             ),
             visual_material=sim_utils.PreviewSurfaceCfg(
-                diffuse_color=(0.35, 0.5, 0.25),
+                diffuse_color=(0.4, 0.4, 0.4),
                 roughness=0.9,
             ),
             debug_vis=False,
         )
+        
+        # # Sony Venice Camera - visual decoration only, no collision
+        # self.scene.sony_venice = AssetBaseCfg(
+        #     prim_path="{ENV_REGEX_NS}/SonyVenice",
+        #     spawn=sim_utils.UsdFileCfg(
+        #         usd_path="/home/partnersteam2/Downloads/Collected_SPOT_NEXUS_CAM_1_SONY_VENICE_V1/SPOT_NEXUS_CAM_1_SONY_VENICE_V1.usd",
+        #         scale=(0.5, 0.5, 0.5),
+        #     ),
+        #     init_state=AssetBaseCfg.InitialStateCfg(pos=(3.0, 1.5, 0.0)),
+        # )
+
         # # NEW: The UR10 Mount Object (Larger & Static)
         # self.scene.obstacle = RigidObjectCfg(
         #     prim_path="{ENV_REGEX_NS}/Obstacle",
         #     spawn=sim_utils.UsdFileCfg(
-        #         usd_path="/home/partnersteam2/IsaacRobotics/assets/Collected_ur10_mount/ur10_mount.usd",
+        #         usd_path="//home/partnersteam2/Downloads/Collected_SPOT_NEXUS_CAM_1_SONY_VENICE_V1/SPOT_NEXUS_CAM_1_SONY_VENICE_V1.usd",
         #         rigid_props=sim_utils.RigidBodyPropertiesCfg(
         #             kinematic_enabled=True  # Freezes the object in place (acts like a solid wall)
         #         ),
