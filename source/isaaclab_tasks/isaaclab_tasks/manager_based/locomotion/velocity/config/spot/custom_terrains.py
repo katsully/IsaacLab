@@ -109,7 +109,7 @@ class RoughWithPlinthsTerrainCfg(SubTerrainBaseCfg):
 
     noise_range: tuple[float, float] = (0.02, 0.08)
     noise_step: float = 0.02
-    obstacle_width_range: tuple[float, float] = (0.3, 0.4)
-    obstacle_height_range: tuple[float, float] = (0.5, 0.8)
-    num_obstacles: int = 1
+    obstacle_width_range: tuple[float, float] = (0.0, 0.0)
+    obstacle_height_range: tuple[float, float] = (0.0, 0.0)
+    num_obstacles: int = 0
     platform_width: float = 2.0
