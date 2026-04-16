@@ -9,14 +9,15 @@ def reset_at_origin(
     env: ManagerBasedRLEnv,
     env_ids: torch.Tensor,
     asset_cfg: SceneEntityCfg,
-    spawn_height_offset: float = 0.5,
+    spawn_height_offset: float = 1.0,
+    spread: float = 2.0,
 ):
-    """Spawn robots at origin."""
+    """Spawn robots spread around origin."""
     robot: Articulation = env.scene[asset_cfg.name]
     n = len(env_ids)
 
-    x = torch.zeros(n, device=env.device)
-    y = torch.zeros(n, device=env.device)
+    x = torch.empty(n, device=env.device).uniform_(-spread, spread)
+    y = torch.empty(n, device=env.device).uniform_(-spread, spread)
     z = torch.full((n,), spawn_height_offset, device=env.device)
 
     yaw = torch.empty(n, device=env.device).uniform_(-3.14, 3.14)
